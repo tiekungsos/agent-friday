@@ -1,0 +1,41 @@
+{
+  "name": "friday-jarvis-mac",
+  "version": "0.4.0",
+  "description": "JARVIS-style desktop assistant prototype for MacBook",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "check": "node scripts/check.js",
+    "pack": "electron-builder --dir",
+    "build:mac": "electron-builder --mac"
+  },
+  "keywords": [
+    "friday",
+    "jarvis",
+    "electron",
+    "mac"
+  ],
+  "author": "Friday",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.friday.jarvis.mac",
+    "productName": "Friday Jarvis",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "**/*",
+      "!release{,/**}"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": ["dmg", "zip"]
+    },
+    "asar": true
+  }
+}

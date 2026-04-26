@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friday // JARVIS for Mac</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar glass-panel">
+        <div>
+          <div class="brand-row">
+            <div class="brand-mark">F</div>
+            <div>
+              <div class="eyebrow">Friday System</div>
+              <h1>JARVIS for Mac</h1>
+            </div>
+          </div>
+
+          <div class="section-label">สถานะระบบ</div>
+          <div class="status-stack">
+            <div class="status-card active"><span></span>พร้อมทำงาน</div>
+            <div class="status-card"><strong>โหมด:</strong><span id="modeText">Command Center</span></div>
+            <div class="status-card"><strong>Platform:</strong><span id="platformText">macOS target</span></div>
+            <div class="status-card"><strong>Memory:</strong><span id="memoryCountText">0 saved notes</span></div>
+            <div class="status-card"><strong>Notes:</strong><span id="noteCountText">0 saved notes</span></div>
+          </div>
+
+          <div class="section-label">ทีมผู้ช่วย</div>
+          <div class="agent-list" id="agentList"></div>
+        </div>
+
+        <div class="sidebar-stack">
+          <div class="settings-card glass-subpanel">
+            <div class="section-label">Native settings</div>
+            <div class="settings-form">
+              <label>
+                <span>OpenAI Base URL</span>
+                <input id="baseUrlInput" type="text" placeholder="https://api.openai.com/v1" />
+              </label>
+              <label>
+                <span>Model</span>
+                <input id="modelInput" type="text" placeholder="gpt-4.1-mini" />
+              </label>
+              <label>
+                <span>Workspace root</span>
+                <input id="workspaceInput" type="text" placeholder="/Users/boss/Documents/FridayWorkspace" />
+              </label>
+              <label class="toggle-row">
+                <input id="notificationsToggle" type="checkbox" />
+                <span>macOS notifications</span>
+              </label>
+              <button class="ghost-btn small" id="saveSettingsBtn">บันทึก settings</button>
+              <p class="muted-note" id="settingsStatus">พร้อมใช้ค่าเริ่มต้นจากระบบ</p>
+            </div>
+          </div>
+
+          <div class="memory-card glass-subpanel">
+            <div class="section-label">Core rules</div>
+            <ul>
+              <li>รับโจทย์จากบอสก่อนเสมอ</li>
+              <li>แยกงานให้เหมาะกับ agent</li>
+              <li>สรุปผลลัพธ์เป็นคำตอบเดียว</li>
+              <li>เรียนรู้จากงานและพัฒนาตลอด</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-grid">
+        <section class="hero-panel glass-panel">
+          <div class="hero-top">
+            <div>
+              <div class="eyebrow">Voice + Agent Orchestration</div>
+              <h2>ศูนย์บัญชาการของฟรายเดย์บน MacBook</h2>
+              <p>
+                เวอร์ชันนี้มีสมองเริ่มต้น, planner/reviewer loop, tool use จริง, local memory และ native settings สำหรับต่อยอดเป็น JARVIS แบบใช้งานได้บน Mac
+              </p>
+            </div>
+            <div class="hero-actions">
+              <button class="primary-btn" id="voiceToggleBtn">เริ่มโหมดฟังเสียง</button>
+              <button class="ghost-btn" id="missionBtn">สร้างภารกิจตัวอย่าง</button>
+            </div>
+          </div>
+
+          <div class="orb-zone">
+            <div class="orb-ring ring-one"></div>
+            <div class="orb-ring ring-two"></div>
+            <div class="orb-core" id="orbCore"><span id="orbState">STANDBY</span></div>
+            <div class="transcript-box glass-subpanel">
+              <div class="section-label">Live command</div>
+              <p id="transcriptText">พร้อมรับคำสั่งจากบอส เช่น “สรุปงานวันนี้”, “เรียกทีมวิเคราะห์”, หรือ “วางแผนโปรเจกต์ใหม่”</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="command-panel glass-panel">
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">Mission composer</div>
+              <h3>ตั้งคำสั่งให้ฟรายเดย์</h3>
+            </div>
+            <div class="mini-chip">Multi-agent ready</div>
+          </div>
+
+          <div class="composer-box">
+            <textarea id="commandInput" placeholder="เช่น: ช่วยออกแบบโปรเจกต์ AI receptionist สำหรับบริษัท และแตกงานให้ทีม"></textarea>
+            <div class="composer-actions">
+              <button class="primary-btn small" id="dispatchBtn">กระจายงานให้ทีม</button>
+              <button class="ghost-btn small" id="saveMemoryBtn">บันทึกลง memory</button>
+              <button class="ghost-btn small" id="clearBtn">ล้างข้อความ</button>
+            </div>
+          </div>
+
+          <div class="quick-actions">
+            <button class="quick-chip" data-prompt="สรุปสิ่งที่ต้องทำวันนี้แล้วแตก owner ให้ทีม">สรุปงานวันนี้</button>
+            <button class="quick-chip" data-prompt="ออกแบบโปรเจกต์ AI assistant สำหรับบริษัท">ออกแบบโปรเจกต์ AI</button>
+            <button class="quick-chip" data-prompt="รีวิวไอเดียธุรกิจนี้และหาความเสี่ยงที่ต้องระวัง">รีวิวไอเดียธุรกิจ</button>
+            <button class="quick-chip" data-prompt="ช่วยเตรียมแผนเปิดตัวโปรดักต์ใหม่พร้อม timeline">วางแผนเปิดตัว</button>
+          </div>
+
+          <div class="dispatch-output glass-subpanel">
+            <div class="section-label">Friday dispatch log</div>
+            <div id="dispatchLog" class="log-list"></div>
+          </div>
+        </section>
+
+        <section class="dashboard-panel glass-panel">
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">Overview</div>
+              <h3>ภาพรวมการทำงาน</h3>
+            </div>
+            <div class="mini-chip success">Self-improving</div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card glass-subpanel"><strong id="missionCount">0</strong><span>ภารกิจที่สร้าง</span></div>
+            <div class="kpi-card glass-subpanel"><strong id="activeAgentCount">0</strong><span>agent ที่กำลังถูกใช้งาน</span></div>
+            <div class="kpi-card glass-subpanel"><strong id="objectiveCount">0</strong><span>objectives ที่แยกได้</span></div>
+          </div>
+
+          <div class="timeline glass-subpanel">
+            <div class="section-label">Growth loop</div>
+            <div class="timeline-item"><span></span>ทุกงานต้องมี owner และ reviewer</div>
+            <div class="timeline-item"><span></span>ฟรายเดย์ต้องสรุปผลเป็นคำตอบเดียว</div>
+            <div class="timeline-item"><span></span>ทีมต้องเก็บบทเรียนเพื่อพัฒนา workflow</div>
+          </div>
+
+          <div class="phase-four-grid">
+            <article class="glass-subpanel phase-card">
+              <div class="section-label">Execution plan</div>
+              <ol id="executionPlanList" class="plan-list"></ol>
+            </article>
+            <article class="glass-subpanel phase-card">
+              <div class="section-label">Reviewer checklist</div>
+              <ul id="reviewChecklist" class="review-list"></ul>
+            </article>
+            <article class="glass-subpanel phase-card tool-card">
+              <div class="section-label">Tool bench</div>
+              <div class="tool-form">
+                <select id="toolSelect"></select>
+                <textarea id="toolPayloadInput" placeholder='{"text":"บันทึก note ใหม่"}'></textarea>
+                <div class="composer-actions">
+                  <button class="primary-btn small" id="toolRunBtn">Run tool</button>
+                  <button class="ghost-btn small" id="toolAutoBtn">Use suggested payload</button>
+                </div>
+                <pre id="toolOutput" class="tool-output">เลือก tool แล้วกด run เพื่อทดสอบการทำงานจริง</pre>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="intelligence-panel glass-panel">
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">Friday brain</div>
+              <h3>Mission intelligence</h3>
+            </div>
+            <div class="mini-chip" id="intelligenceMode">Idle</div>
+          </div>
+
+          <div class="brain-grid">
+            <article class="brain-card glass-subpanel">
+              <div class="section-label">Summary</div>
+              <p id="brainSummary">เมื่อได้รับคำสั่ง ฟรายเดย์จะสรุปเจตนาหลักของบอสตรงนี้</p>
+            </article>
+            <article class="brain-card glass-subpanel">
+              <div class="section-label">Objectives</div>
+              <ul id="objectiveList" class="brain-list"></ul>
+            </article>
+            <article class="brain-card glass-subpanel">
+              <div class="section-label">Risks</div>
+              <ul id="riskList" class="brain-list"></ul>
+            </article>
+            <article class="brain-card glass-subpanel">
+              <div class="section-label">Friday response</div>
+              <p id="fridayResponse">ฟรายเดย์จะสร้างคำตอบสั้น ๆ ว่าควรเริ่มทำอะไรให้บอสเห็นตรงนี้</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="memory-panel glass-panel">
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">Local memory</div>
+              <h3>Memory vault + notes</h3>
+            </div>
+            <div class="mini-chip">On-device</div>
+          </div>
+          <div id="memoryList" class="memory-list"></div>
+          <div class="notes-section">
+            <div class="section-label">Saved notes</div>
+            <div id="notesList" class="memory-list"></div>
+          </div>
+        </section>
+
+        <section class="activity-panel glass-panel wide">
+          <div class="panel-head">
+            <div>
+              <div class="eyebrow">Command feed</div>
+              <h3>สถานะการตอบสนอง</h3>
+            </div>
+            <div class="mini-chip" id="feedMode">Passive monitoring</div>
+          </div>
+          <div id="activityFeed" class="feed-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
