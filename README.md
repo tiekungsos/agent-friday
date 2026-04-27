@@ -93,3 +93,8 @@ npm start
 - เพิ่ม planner/reviewer loop แบบ multi-agent จริง
 - เพิ่ม settings sync และ import/export workspace
 - สร้างเวอร์ชัน packaged สำหรับ Mac `.app`
+
+## เอกสารเพิ่มใน repo
+- `docs/ROADMAP.md` — roadmap รวมของ Friday Jarvis
+- `docs/release-checklist.md` — checklist สำหรับ build/release บน Mac
+- `docs/plans/phase-5-native-operator-foundations.md` — แผน implementation ของ Phase 5
